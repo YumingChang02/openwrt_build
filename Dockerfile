@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:latest
 
 ARG USERNAME="markchang"
 ARG PASSWD="5;u.4au/6"
@@ -18,6 +18,7 @@ RUN apt update && \
         ecj \
         fastjar \
         file \
+	gcc \
         g++ \
         gawk \
         gettext \
@@ -26,6 +27,7 @@ RUN apt update && \
         libelf-dev \
         libncurses5-dev \
         libncursesw5-dev \
+	libpcre3-dev \
         libssl-dev \
         locales \
         nano \
