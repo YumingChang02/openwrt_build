@@ -31,6 +31,7 @@ RUN apt update && \
         libssl-dev \
         locales \
         nano \
+	numactl \
         openssl \
         python \
         python2.7-dev \
