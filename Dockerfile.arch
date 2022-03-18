@@ -1,0 +1,74 @@
+FROM archlinux
+
+ARG USERNAME="YOUR_USERNAME"
+ARG PASSWD="YOUR_PASSWORD"
+ARG WORKSPACE="/workspace"
+
+RUN pacman -Syyu --noconfirm --needed \
+        asciidoc \
+        autoconf \
+        automake \
+        base-devel \
+        bash \
+        binutils \
+        bison \
+        bzip2 \
+        fakeroot \
+        file \
+        findutils \
+        flex \
+        gawk \
+        gcc \
+        gettext \
+        git \
+        grep \
+        groff \
+        gzip \
+        help2man \
+        intltool \
+        libelf \
+        libtool \
+        libxslt \
+        m4 \
+        make \
+        nano \
+        ncurses \
+        openssl \
+        patch \
+        perl-extutils-makemaker \
+        pkgconf \
+        python \
+        rsync \
+        sed \
+        openssl \
+        sudo \
+        texinfo \
+        time \
+        unzip \
+        util-linux \
+        wget \
+        which \
+        zlib
+
+# preparations
+RUN sed -i "s/#\ en_US.UTF-8/en_US.UTF-8/g" /etc/locale.gen
+RUN locale-gen
+ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
+
+# add user
+RUN useradd -rm -s /bin/bash -u 1000 -p "$(openssl passwd -1 $PASSWD)" $USERNAME
+
+# allow sudo
+RUN echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME
+
+# patch away python.so
+RUN rm -v /usr/lib/libpython3.*.so
+
+#sync repo
+RUN mkdir $WORKSPACE
+RUN chown -R $USERNAME $WORKSPACE
+WORKDIR $WORKSPACE
+USER $USERNAME
+
+ENTRYPOINT [ "/bin/bash" ]
