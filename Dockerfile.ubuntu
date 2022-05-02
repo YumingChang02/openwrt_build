@@ -1,7 +1,7 @@
 FROM ubuntu:latest
 
-ARG USERNAME="markchang"
-ARG PASSWD="5;u.4au/6"
+ARG USERNAME="USERNAME"
+ARG PASSWD="PASSWORD"
 ARG WORKSPACE="/workspace"
 
 RUN sed -i "s/security.ubuntu.com/free.nchc.org.tw/g" /etc/apt/sources.list
