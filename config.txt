@@ -1,0 +1,24 @@
+################################################################################
+# Bootloader configuration - config.txt
+################################################################################
+
+################################################################################
+# For overclocking and various other settings, see:
+# https://www.raspberrypi.org/documentation/configuration/config-txt/README.md
+################################################################################
+
+# OpenWrt config
+include distroconfig.txt
+
+[all]
+# Place your custom settings here.
+arm_freq=1000
+arm_freq_min=500
+gpu_freq=250
+over_voltage=-3
+over_voltage_min=-5
+
+# rtc
+dtparam=i2c_arm=on
+dtparam=i2c_vc=on
+dtoverlay=i2c-rtc,pcf85063a,i2c_csi_dsi
