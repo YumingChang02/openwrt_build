@@ -4,9 +4,7 @@ ARG USERNAME="USERNAME"
 ARG PASSWD="PASSWORD"
 ARG WORKSPACE="/workspace"
 
-RUN sed -i "s/security.ubuntu.com/free.nchc.org.tw/g" /etc/apt/sources.list
-RUN sed -i "s/archive.ubuntu.com/free.nchc.org.tw/g" /etc/apt/sources.list
-RUN echo 'Acquire::http { Proxy "http://192.168.100.97:3142"; };' >> /etc/apt/apt.conf.d/01proxy
+RUN echo 'Acquire::http { Proxy "http://192.168.100.21:3142"; };' >> /etc/apt/apt.conf.d/01proxy
 
 ENV TZ="Asia/Taipei"
 
@@ -23,6 +21,8 @@ RUN apt update && \
         gawk \
         gettext \
         git \
+        golang \
+        htop \
         java-propose-classpath \
         libelf-dev \
         libncurses5-dev \
