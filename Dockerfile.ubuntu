@@ -15,6 +15,7 @@ RUN apt update && \
         ccache \
         ecj \
         fastjar \
+        flock \
         file \
 	gcc \
         g++ \
