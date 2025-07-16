@@ -1,0 +1,48 @@
+[1mdiff --git a/feeds.conf.default b/feeds.conf.default[m
+[1mindex 98dcb2aa9..bcab1510a 100644[m
+[1m--- a/feeds.conf.default[m
+[1m+++ b/feeds.conf.default[m
+[36m@@ -9,3 +9,4 @@[m [msrc-git telephony https://github.com/coolsnowwolf/telephony.git[m
+ #src-git targets https://github.com/openwrt/targets.git[m
+ #src-git oldpackages http://git.openwrt.org/packages.git[m
+ #src-link custom /usr/src/openwrt/custom-feed[m
+[32m+[m[32msrc-git qmodem https://github.com/FUjr/QModem.git;main[m
+[1mdiff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network[m
+[1mindex 5c53be577..5172d207e 100644[m
+[1m--- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network[m
+[1m+++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network[m
+[36m@@ -37,7 +37,8 @@[m [mmediatek_setup_interfaces()[m
+ 		;;[m
+ 	bananapi,bpi-r3-mini|\[m
+ 	huasifei,wh3000-emmc|\[m
+[31m-	huasifei,wh3000-pro)[m
+[32m+[m	[32mhuasifei,wh3000-pro|\[m
+[32m+[m[32m        airpi,ap3000m-emmc)[m
+ 		ucidef_set_interfaces_lan_wan eth0 eth1[m
+ 		;;[m
+ 	bananapi,bpi-r4|\[m
+[1mdiff --git a/target/linux/mediatek/image/filogic.mk b/target/linux/mediatek/image/filogic.mk[m
+[1mindex c793018a8..87727a7a7 100644[m
+[1m--- a/target/linux/mediatek/image/filogic.mk[m
+[1m+++ b/target/linux/mediatek/image/filogic.mk[m
+[36m@@ -52,6 +52,20 @@[m [mdefine Build/mt798x-gpt[m
+ 	rm $@.tmp[m
+ endef[m
+ [m
+[32m+[m[32mdefine Device/airpi_ap3000m-emmc[m
+[32m+[m[32m  DEVICE_VENDOR := Airpi[m
+[32m+[m[32m  DEVICE_MODEL := AP3000M[m
+[32m+[m[32m  DEVICE_DTS := mt7981b-airpi-ap3000m[m
+[32m+[m[32m  DEVICE_DTS_DIR := ../dts[m
+[32m+[m[32m  UBINIZE_OPTS := -E 5[m
+[32m+[m[32m  BLOCKSIZE := 128k[m
+[32m+[m[32m  PAGESIZE := 2048[m
+[32m+[m[32m  KERNEL_IN_UBI := 1[m
+[32m+[m[32m  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata[m
+[32m+[m[32m  DEVICE_PACKAGES := kmod-usb3 kmod-mt7981-firmware mt7981-wo-firmware[m
+[32m+[m[32mendef[m
+[32m+[m[32mTARGET_DEVICES += airpi_ap3000m-emmc[m
+[32m+[m
+ define Build/cetron-header[m
+ 	$(eval magic=$(word 1,$(1)))[m
+ 	$(eval model=$(word 2,$(1)))[m
