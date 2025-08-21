@@ -15,7 +15,6 @@ RUN apt update && \
         ccache \
         ecj \
         fastjar \
-        flock \
         file \
 	gcc \
         g++ \
@@ -44,6 +43,7 @@ RUN apt update && \
         swig \
         time \
         unzip \
+        util-linux \
         wget \
         xsltproc \
         zlib1g-dev \
