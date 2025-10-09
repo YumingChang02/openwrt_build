@@ -4,7 +4,7 @@ ARG USERNAME="USERNAME"
 ARG PASSWD="PASSWORD"
 ARG WORKSPACE="/workspace"
 
-RUN echo 'Acquire::http { Proxy "http://192.168.100.21:3142"; };' >> /etc/apt/apt.conf.d/01proxy
+RUN echo 'Acquire::http { Proxy "http://aptcacheng.goedge.inc:3142"; };' >> /etc/apt/apt.conf.d/01proxy
 
 ENV TZ="Asia/Taipei"
 
