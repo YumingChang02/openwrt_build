@@ -1,16 +1,7 @@
 diff --git a/package/base-files/files/bin/config_generate b/package/base-files/files/bin/config_generate
-index 52fd105fa..68b27423f 100755
+index 52fd105fa..899374523 100755
 --- a/package/base-files/files/bin/config_generate
 +++ b/package/base-files/files/bin/config_generate
-@@ -147,7 +147,7 @@ generate_network() {
- 		static)
- 			local ipad
- 			case "$1" in
--				lan) ipad=${ipaddr:-"192.168.1.1"} ;;
-+				lan) ipad=${ipaddr:-"192.168.18.254"} ;;
- 				*) ipad=${ipaddr:-"192.168.$((addr_offset++)).1"} ;;
- 			esac
- 
 @@ -296,20 +296,13 @@ generate_static_system() {
  	uci -q batch <<-EOF
  		delete system.@system[0]
@@ -34,8 +25,21 @@ index 52fd105fa..68b27423f 100755
  	EOF
  
  	if json_is_a system object; then
+diff --git a/package/base-files/luci2/bin/config_generate b/package/base-files/luci2/bin/config_generate
+index a6baf7960..6dedbb206 100755
+--- a/package/base-files/luci2/bin/config_generate
++++ b/package/base-files/luci2/bin/config_generate
+@@ -162,7 +162,7 @@ generate_network() {
+ 		static)
+ 			local ipad
+ 			case "$1" in
+-				lan) ipad=${ipaddr:-"192.168.1.1"} ;;
++				lan) ipad=${ipaddr:-"192.168.18.254"} ;;
+ 				*) ipad=${ipaddr:-"192.168.$((addr_offset++)).1"} ;;
+ 			esac
+ 
 diff --git a/package/lean/default-settings/files/zzz-default-settings b/package/lean/default-settings/files/zzz-default-settings
-index 941ca1458..668485bfd 100755
+index 941ca1458..1c9adc265 100755
 --- a/package/lean/default-settings/files/zzz-default-settings
 +++ b/package/lean/default-settings/files/zzz-default-settings
 @@ -2,13 +2,15 @@
@@ -55,7 +59,7 @@ index 941ca1458..668485bfd 100755
 +	add_list system.ntp.server='time.google.com'
 +	add_list system.ntp.server='time.cloudflare.com'
 +
-+        set network.eth1.macaddr='D6:CA:26:02:68:86'
++	set network.eth1.macaddr='D6:CA:26:02:68:86'
  EOF
  uci commit system
  
@@ -73,6 +77,18 @@ index 5c53be577..0c60cb44d 100644
  		ucidef_set_interfaces_lan_wan eth0 eth1
  		;;
  	bananapi,bpi-r4|\
+diff --git a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+index 141b7fa59..cdcd405ad 100755
+--- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
++++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+@@ -44,6 +44,7 @@ platform_do_upgrade() {
+ 			;;
+ 		esac
+ 		;;
++	airpi,ap3000m-emmc|\
+ 	cmcc,rax3000m-emmc|\
+ 	cmcc,xr30-emmc|\
+ 	glinet,gl-mt2500|\
 diff --git a/target/linux/mediatek/image/filogic.mk b/target/linux/mediatek/image/filogic.mk
 index c793018a8..5829b2f21 100644
 --- a/target/linux/mediatek/image/filogic.mk
