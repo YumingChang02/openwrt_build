@@ -1,84 +1,17 @@
-diff --git a/package/base-files/files/bin/config_generate b/package/base-files/files/bin/config_generate
-index 52fd105fa..899374523 100755
---- a/package/base-files/files/bin/config_generate
-+++ b/package/base-files/files/bin/config_generate
-@@ -296,20 +296,13 @@ generate_static_system() {
- 	uci -q batch <<-EOF
- 		delete system.@system[0]
- 		add system system
--		set system.@system[-1].hostname='LEDE'
--		set system.@system[-1].timezone='UTC'
-+		set system.@system[-1].hostname='Airpi-AP3000M'
-+		set system.@system[-1].timezone='Asia/Taipei'
- 		set system.@system[-1].ttylogin='0'
- 		set system.@system[-1].log_size='64'
- 		set system.@system[-1].urandom_seed='0'
- 
- 		delete system.ntp
--		set system.ntp='timeserver'
--		set system.ntp.enabled='1'
--		set system.ntp.enable_server='1'
--		add_list system.ntp.server='time.apple.com'
--		add_list system.ntp.server='time.google.com'
--		add_list system.ntp.server='time.windows.com'
--		add_list system.ntp.server='time.cloudflare.com'
- 	EOF
- 
- 	if json_is_a system object; then
-diff --git a/package/base-files/luci2/bin/config_generate b/package/base-files/luci2/bin/config_generate
-index a6baf7960..6dedbb206 100755
---- a/package/base-files/luci2/bin/config_generate
-+++ b/package/base-files/luci2/bin/config_generate
-@@ -162,7 +162,7 @@ generate_network() {
- 		static)
- 			local ipad
- 			case "$1" in
--				lan) ipad=${ipaddr:-"192.168.1.1"} ;;
-+				lan) ipad=${ipaddr:-"192.168.18.254"} ;;
- 				*) ipad=${ipaddr:-"192.168.$((addr_offset++)).1"} ;;
- 			esac
- 
-diff --git a/package/lean/default-settings/files/zzz-default-settings b/package/lean/default-settings/files/zzz-default-settings
-index 941ca1458..1c9adc265 100755
---- a/package/lean/default-settings/files/zzz-default-settings
-+++ b/package/lean/default-settings/files/zzz-default-settings
-@@ -2,13 +2,15 @@
- 
- uci -q batch <<-EOF
- 	set system.@system[0].timezone='CST-8'
--	set system.@system[0].zonename='Asia/Shanghai'
-+	set system.@system[0].zonename='Asia/Taipei'
- 
- 	delete system.ntp.server
--	add_list system.ntp.server='ntp1.aliyun.com'
--	add_list system.ntp.server='ntp.tencent.com'
--	add_list system.ntp.server='ntp.ntsc.ac.cn'
--	add_list system.ntp.server='time.apple.com'
-+	add_list system.ntp.server='clock.stdtime.gov.tw'
-+	add_list system.ntp.server='time.stdtime.gov.tw'
-+	add_list system.ntp.server='time.google.com'
-+	add_list system.ntp.server='time.cloudflare.com'
-+
-+	set network.eth1.macaddr='D6:CA:26:02:68:86'
- EOF
- uci commit system
- 
 diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-index 5c53be577..0c60cb44d 100644
+index 4034d0571..b4831bf06 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-@@ -37,7 +37,8 @@ mediatek_setup_interfaces()
+@@ -36,6 +36,7 @@ mediatek_setup_interfaces()
+ 	bananapi,bpi-r3)
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 sfp2" "eth1 wan"
  		;;
++	airpi,ap3000m-emmc|\
  	bananapi,bpi-r3-mini|\
  	huasifei,wh3000-emmc|\
--	huasifei,wh3000-pro)
-+	huasifei,wh3000-pro|\
-+	airpi,ap3000m-emmc)
- 		ucidef_set_interfaces_lan_wan eth0 eth1
- 		;;
- 	bananapi,bpi-r4|\
+ 	huasifei,wh3000-pro)
 diff --git a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-index 141b7fa59..cdcd405ad 100755
+index 141b7fa59..26ca9a4fb 100755
 --- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
 @@ -44,6 +44,7 @@ platform_do_upgrade() {
@@ -89,8 +22,16 @@ index 141b7fa59..cdcd405ad 100755
  	cmcc,rax3000m-emmc|\
  	cmcc,xr30-emmc|\
  	glinet,gl-mt2500|\
+@@ -104,6 +105,7 @@ platform_copy_config() {
+ 			;;
+ 		esac
+ 		;;
++	airpi,ap3000m-emmc|\
+ 	cmcc,rax3000m-emmc|\
+ 	cmcc,xr30-emmc|\
+ 	glinet,gl-mt2500|\
 diff --git a/target/linux/mediatek/image/filogic.mk b/target/linux/mediatek/image/filogic.mk
-index c793018a8..5829b2f21 100644
+index 38052de13..10170dea2 100644
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk
 @@ -30,6 +30,19 @@ define Build/mt7988-bl31-uboot
