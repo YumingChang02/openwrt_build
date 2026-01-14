@@ -24,6 +24,7 @@ RUN apt update && \
         golang \
         htop \
         java-propose-classpath \
+        jq \
         libelf-dev \
         libncurses5-dev \
         libncursesw5-dev \
@@ -36,7 +37,9 @@ RUN apt update && \
         python3 \
         python3-dev \
         python3-pyelftools \
+        python3-pysocks \
         python3-setuptools \
+        python3-unidecode \
         qemu-utils \
         rsync \
         subversion \
@@ -67,5 +70,9 @@ RUN mkdir $WORKSPACE
 RUN chown -R $USERNAME $WORKSPACE
 WORKDIR $WORKSPACE
 USER $USERNAME
+
+RUN echo "alias clean_build='clear; make clean; flock /dev/shm/openwrt.build make -j$(nproc)'" >> ~/.bashrc
+RUN echo "alias pull_new='git clone https://github.com/coolsnowwolf/lede .; ./scripts/feeds update -a; ./scripts/feeds install -a'" >> ~/.bashrc
+RUN echo "alias update_source='git pull; ./scripts/feeds update -a; ./scripts/feeds install -a; make menuconfig'" >> ~/.bashrc
 
 ENTRYPOINT [ "/bin/bash" ]
