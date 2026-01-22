@@ -42,6 +42,7 @@ RUN apt update && \
         python3-unidecode \
         qemu-utils \
         rsync \
+        scdoc \
         subversion \
         swig \
         time \
@@ -71,7 +72,8 @@ RUN chown -R $USERNAME $WORKSPACE
 WORKDIR $WORKSPACE
 USER $USERNAME
 
-RUN echo "alias clean_build='clear; make clean; flock /dev/shm/openwrt.build make -j$(nproc)'" >> ~/.bashrc
+RUN echo "alias download_source='clear; flock /dev/shm/openwrt.download make download'" >> ~/.bashrc
+RUN echo "alias clean_build='clear; make clean; flock /dev/shm/openwrt.download make download && flock /dev/shm/openwrt.build make -j$(nproc)' && rm -rf /workspace/tmp/* /workspace/tmp/.[!.]*" >> ~/.bashrc
 RUN echo "alias pull_new='git clone https://github.com/coolsnowwolf/lede .; ./scripts/feeds update -a; ./scripts/feeds install -a'" >> ~/.bashrc
 RUN echo "alias update_source='git pull; ./scripts/feeds update -a; ./scripts/feeds install -a; make menuconfig'" >> ~/.bashrc
 
