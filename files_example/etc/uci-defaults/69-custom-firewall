@@ -1,0 +1,69 @@
+#!/bin/sh
+
+# 1. Create the WG_Dorm Zone
+uci add firewall zone
+uci set firewall.@zone[-1].name='WG_Dorm'
+uci set firewall.@zone[-1].input='ACCEPT'
+uci set firewall.@zone[-1].output='ACCEPT'
+uci set firewall.@zone[-1].forward='ACCEPT'
+uci set firewall.@zone[-1].mtu_fix='1'
+uci set firewall.@zone[-1].masq='1'
+uci add_list firewall.@zone[-1].network='WG_Office'
+
+# 2. Forwarding: WG_Dorm <-> LAN
+uci add firewall forwarding
+uci set firewall.@forwarding[-1].src='WG_Dorm'
+uci set firewall.@forwarding[-1].dest='lan'
+
+uci add firewall forwarding
+uci set firewall.@forwarding[-1].src='lan'
+uci set firewall.@forwarding[-1].dest='WG_Dorm'
+
+# 3. Forwarding: WG_Dorm -> WAN
+uci add firewall forwarding
+uci set firewall.@forwarding[-1].src='WG_Dorm'
+uci set firewall.@forwarding[-1].dest='wan'
+
+# 4. Redirect: WireGuard Port Forward (to self/lan)
+uci add firewall redirect
+uci set firewall.@redirect[-1].name='WG_Dorm'
+uci set firewall.@redirect[-1].src='wan'
+uci set firewall.@redirect[-1].dest='lan'
+uci set firewall.@redirect[-1].target='DNAT'
+uci set firewall.@redirect[-1].src_dport='51820'
+uci set firewall.@redirect[-1].dest_port='51820'
+uci add_list firewall.@redirect[-1].proto='udp'
+
+# 5. Rule: Allow WireGuard on WAN Input
+uci add firewall rule
+uci set firewall.@rule[-1].name='WG_Dorm'
+uci set firewall.@rule[-1].src='wan'
+uci set firewall.@rule[-1].dest_port='51820'
+uci set firewall.@rule[-1].target='ACCEPT'
+uci add_list firewall.@rule[-1].proto='udp'
+
+# 6. Redirects: HTTP/HTTPS Port Forwards
+# Device .30
+uci add firewall redirect
+uci set firewall.@redirect[-1].name='30-http'
+uci set firewall.@redirect[-1].src='wan'
+uci set firewall.@redirect[-1].dest='lan'
+uci set firewall.@redirect[-1].src_dport='80'
+uci set firewall.@redirect[-1].dest_ip='192.168.18.30'
+uci set firewall.@redirect[-1].dest_port='80'
+uci set firewall.@redirect[-1].target='DNAT'
+uci add_list firewall.@redirect[-1].proto='tcp'
+
+uci add firewall redirect
+uci set firewall.@redirect[-1].name='30-https'
+uci set firewall.@redirect[-1].src='wan'
+uci set firewall.@redirect[-1].dest='lan'
+uci set firewall.@redirect[-1].src_dport='443'
+uci set firewall.@redirect[-1].dest_ip='192.168.18.30'
+uci set firewall.@redirect[-1].dest_port='443'
+uci set firewall.@redirect[-1].target='DNAT'
+uci add_list firewall.@redirect[-1].proto='tcp'
+
+# Final Commit
+uci commit firewall
+exit 0

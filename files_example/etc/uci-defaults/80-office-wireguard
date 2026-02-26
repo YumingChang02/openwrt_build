@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Define the Interface
+uci set network.WG_Office=interface
+uci set network.WG_Office.proto='wireguard'
+uci set network.WG_Office.private_key='<ENTER KEY HERE>'
+uci add_list network.WG_Office.addresses='<WIREGUARD AFFRESS>'
+
+# Define the Peer (Linked to WG_Office)
+# We name the section 'peer_office' to keep it distinct
+uci set network.peer_office=wireguard_WG_Office
+uci set network.peer_office.public_key='<ENTER KEY HERE>'
+uci set network.peer_office.endpoint_host='<ENTER SERVER IP HERE>'
+uci set network.peer_office.endpoint_port='<ENTER SERVER PORT HERE>'
+uci set network.peer_office.route_allowed_ips='1'
+uci set network.peer_office.persistent_keepalive='25'
+
+# Add your specific allowed IPs, here is two examples
+uci add_list network.peer_office.allowed_ips='<WIREGUARD ALLOWEDIPS>'
+uci add_list network.peer_office.allowed_ips='<WIREGUARD ALLOWEDIPS>'
+
+# Final Commit
+uci commit network
+exit 0

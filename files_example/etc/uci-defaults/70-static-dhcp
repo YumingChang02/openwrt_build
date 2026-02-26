@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Set the DHCP limit for the 'lan' section to 100
+uci set dhcp.lan.limit='100'
+
+# Setup static IPs, COPY BLOCK FOR MULTIPLE
+uci set dhcp.VM1=host
+uci set dhcp.VM1.name='VM1'
+uci set dhcp.VM1.mac='<TARGET MAC ADDRESS>'
+uci set dhcp.VM1.ip='<STATIC PRIVATE IP>'
+
+# Commit the changes to persist them
+uci commit dhcp
+
+exit 0

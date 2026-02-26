@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# disable docker
+/etc/init.d/dockerd stop
+/etc/init.d/dockerd disable
+
+exit 0

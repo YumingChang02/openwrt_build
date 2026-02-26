@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# system settings
+uci set system.@system[-1].hostname='<YOUR DESIRED HOSTNAME>'
+uci set system.@system[-1].timezone='CST-8'
+uci set system.@system[-1].zonename='Asia/Taipei'
+uci set system.@system[-1].description='<YOUR DESCRIPTION>'
+
+# config ntp
+# uci set system.ntp.enabled='0'
+uci delete system.ntp.server
+uci add_list system.ntp.server='clock.stdtime.gov.tw'
+uci add_list system.ntp.server='time.stdtime.gov.tw'
+uci add_list system.ntp.server='time.google.com'
+uci add_list system.ntp.server='time.cloudflare.com'
+
+if [ -f "/etc/init.d/ntpd" ]; then
+    /etc/init.d/ntpd enable
+fi
+
+/etc/init.d/sysntpd stop
+/etc/init.d/sysntpd disable
+
+# Final commit
+uci commit system
+exit 0

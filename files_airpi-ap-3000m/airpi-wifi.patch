@@ -1,0 +1,50 @@
+diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+index 4034d0571..f0d59c9b7 100644
+--- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
++++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+@@ -38,7 +38,8 @@ mediatek_setup_interfaces()
+ 		;;
+ 	bananapi,bpi-r3-mini|\
+ 	huasifei,wh3000-emmc|\
+-	huasifei,wh3000-pro)
++	huasifei,wh3000-pro|\
++	airpi,ap3000m-emmc)
+ 		ucidef_set_interfaces_lan_wan eth0 eth1
+ 		;;
+ 	bananapi,bpi-r4|\
+diff --git a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+index 141b7fa59..cdcd405ad 100755
+--- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
++++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+@@ -44,6 +44,7 @@ platform_do_upgrade() {
+ 			;;
+ 		esac
+ 		;;
++	airpi,ap3000m-emmc|\
+ 	cmcc,rax3000m-emmc|\
+ 	cmcc,xr30-emmc|\
+ 	glinet,gl-mt2500|\
+diff --git a/target/linux/mediatek/image/filogic.mk b/target/linux/mediatek/image/filogic.mk
+index 38052de13..76bd08656 100644
+--- a/target/linux/mediatek/image/filogic.mk
++++ b/target/linux/mediatek/image/filogic.mk
+@@ -302,6 +302,19 @@ define Device/cmcc_a10
+ endef
+ TARGET_DEVICES += cmcc_a10
+ 
++define Device/airpi_ap3000m-emmc
++  DEVICE_VENDOR := Airpi
++  DEVICE_MODEL := AP3000M
++  DEVICE_DTS := mt7981b-airpi-ap3000m
++  DEVICE_DTS_DIR := ../dts
++  KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
++  KERNEL_INITRAMFS := kernel-bin | lzma | \
++  fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
++  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
++  DEVICE_PACKAGES := kmod-usb3 kmod-mt7981-firmware mt7981-wo-firmware
++endef
++TARGET_DEVICES += airpi_ap3000m-emmc
++
+ define Device/cmcc_a10-mod
+   DEVICE_VENDOR := CMCC
+   DEVICE_MODEL := A10 (U-Boot mod)

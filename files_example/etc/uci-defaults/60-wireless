@@ -1,0 +1,54 @@
+#!/bin/sh
+
+if [ ! -f /etc/config/wireless ]; then
+    wifi detect > /etc/config/wireless
+fi
+
+uci delete wireless.radio0
+uci set wireless.radio0=wifi-device
+uci set wireless.radio0.type='mac80211'
+uci set wireless.radio0.path='platform/soc/18000000.wifi'
+uci set wireless.radio0.channel='auto'
+uci set wireless.radio0.band='2g'
+uci set wireless.radio0.htmode='HE40'
+uci set wireless.radio0.disabled='0'
+uci set wireless.radio0.cell_density='0'
+uci set wireless.radio0.country='US'
+
+uci delete wireless.default_radio0
+uci set wireless.default_radio0=wifi-iface
+uci set wireless.default_radio0.device='radio0'
+uci set wireless.default_radio0.network='lan'
+uci set wireless.default_radio0.mode='ap'
+uci set wireless.default_radio0.ssid='<WIFI SSID>'
+uci set wireless.default_radio0.encryption='sae-mixed'
+uci set wireless.default_radio0.key='<WIFI PASSWORD>'
+uci set wireless.default_radio0.disabled='0'
+
+uci delete wireless.radio1
+uci set wireless.radio1=wifi-device
+uci set wireless.radio1.type='mac80211'
+uci set wireless.radio1.path='platform/soc/18000000.wifi+1'
+uci set wireless.radio1.channel='auto'
+uci set wireless.radio1.band='5g'
+uci set wireless.radio1.htmode='HE160'
+uci set wireless.radio1.disabled='0'
+uci set wireless.radio0.cell_density='0'
+uci set wireless.radio1.country='US'
+
+uci delete wireless.default_radio1
+uci set wireless.default_radio1=wifi-iface
+uci set wireless.default_radio1.device='radio1'
+uci set wireless.default_radio1.network='lan'
+uci set wireless.default_radio1.mode='ap'
+uci set wireless.default_radio1.ssid='<WIFI SSID>'
+uci set wireless.default_radio1.encryption='sae-mixed'
+uci set wireless.default_radio1.key='<WIFI PASSWORD>'
+uci set wireless.default_radio1.disabled='0'
+
+
+# Final Commit
+uci commit wireless
+
+# /sbin/wifi config
+exit 0
