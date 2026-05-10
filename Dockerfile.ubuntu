@@ -4,7 +4,7 @@ ARG USERNAME="USERNAME"
 ARG PASSWD="PASSWORD"
 ARG WORKSPACE="/workspace"
 
-RUN echo 'Acquire::http { Proxy "http://aptcacheng.goedge.inc:3142"; };' >> /etc/apt/apt.conf.d/01proxy
+# RUN echo 'Acquire::http { Proxy "http://aptcacheng.goedge.inc:3142"; };' >> /etc/apt/apt.conf.d/01proxy
 
 ENV TZ="Asia/Taipei"
 
@@ -56,8 +56,8 @@ RUN apt update && \
 # preparations
 RUN sed -i "s/#\ en_US.UTF-8/en_US.UTF-8/g" /etc/locale.gen
 RUN locale-gen
-ENV LANG en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
+ENV LANG="en_US.UTF-8"
+ENV LC_ALL="en_US.UTF-8"
 
 # add user
 RUN userdel ubuntu
